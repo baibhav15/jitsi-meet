@@ -25,6 +25,7 @@ import MoreOptionsButton from './MoreOptionsButton';
 import RaiseHandButton from './RaiseHandButton';
 import ToggleCameraButton from './ToggleCameraButton';
 import styles from './styles';
+import DesktopSharingButton from './DesktopSharingButton';
 
 /**
  * The type of the React {@code Component} props of {@link OverflowMenu}.
@@ -130,7 +131,6 @@ class OverflowMenu extends PureComponent<Props, State> {
                 <InviteButton { ...buttonProps } />
                 <AudioOnlyButton { ...buttonProps } />
                 <RaiseHandButton { ...buttonProps } />
-                <LobbyModeButton { ...buttonProps } />
                 <MoreOptionsButton { ...moreOptionsButtonProps } />
                 <Collapsible collapsed = { !showMore }>
                     <ToggleCameraButton { ...buttonProps } />
@@ -141,8 +141,13 @@ class OverflowMenu extends PureComponent<Props, State> {
                     <RoomLockButton { ...buttonProps } />
                     <ClosedCaptionButton { ...buttonProps } />
                     <SharedDocumentButton { ...buttonProps } />
-                    <HelpButton { ...buttonProps } />
                 </Collapsible>
+                <SharedDocumentButton { ...buttonProps } />
+                <HelpButton { ...buttonProps } />
+                {
+                    this.props._desktopSharingEnabled
+                        && <DesktopSharingButton  { ...buttonProps } />
+                }
             </BottomSheet>
         );
     }
@@ -237,9 +242,22 @@ class OverflowMenu extends PureComponent<Props, State> {
  * @returns {Props}
  */
 function _mapStateToProps(state) {
+    let { desktopSharingEnabled } = state['features/base/conference'];
+    if (state['features/base/config'].enableFeaturesBasedOnToken) {
+        // we enable desktop sharing if any participant already have this
+        // feature enabled
+        desktopSharingEnabled = getParticipants(state)
+            .find(({ features = {} }) =>
+                String(features['screen-sharing']) === 'true') !== undefined;
+    }
+
     return {
-        _bottomSheetStyles: ColorSchemeRegistry.get(state, 'BottomSheet'),
-        _isOpen: isDialogOpen(state, OverflowMenu_)
+        _bottomSheetStyles:
+            ColorSchemeRegistry.get(state, 'BottomSheet'),
+        _chatEnabled: getFeatureFlag(state, CHAT_ENABLED, true),
+        _isOpen: isDialogOpen(state, OverflowMenu_),
+        _recordingEnabled: Platform.OS !== 'ios' || getFeatureFlag(state, IOS_RECORDING_ENABLED),
+        _desktopSharingEnabled: Boolean(desktopSharingEnabled)
     };
 }
 
