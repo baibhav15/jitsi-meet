@@ -123,7 +123,7 @@ class OverflowMenu extends PureComponent<Props, State> {
         };
 
         return (
-            <BottomSheet
+           <BottomSheet
                 onCancel = { this._onCancel }
                 onSwipe = { this._onSwipe }
                 renderHeader = { this._renderMenuExpandToggle }>
@@ -131,23 +131,16 @@ class OverflowMenu extends PureComponent<Props, State> {
                 <InviteButton { ...buttonProps } />
                 <AudioOnlyButton { ...buttonProps } />
                 <RaiseHandButton { ...buttonProps } />
-                <MoreOptionsButton { ...moreOptionsButtonProps } />
+                <DesktopSharingButton  { ...buttonProps } />
                 <Collapsible collapsed = { !showMore }>
                     <ToggleCameraButton { ...buttonProps } />
                     <TileViewButton { ...buttonProps } />
                     <RecordButton { ...buttonProps } />
                     <LiveStreamButton { ...buttonProps } />
-                    <VideoShareButton { ...buttonProps } />
                     <RoomLockButton { ...buttonProps } />
                     <ClosedCaptionButton { ...buttonProps } />
                     <SharedDocumentButton { ...buttonProps } />
                 </Collapsible>
-                <SharedDocumentButton { ...buttonProps } />
-                <HelpButton { ...buttonProps } />
-                {
-                    this.props._desktopSharingEnabled
-                        && <DesktopSharingButton  { ...buttonProps } />
-                }
             </BottomSheet>
         );
     }
@@ -242,22 +235,9 @@ class OverflowMenu extends PureComponent<Props, State> {
  * @returns {Props}
  */
 function _mapStateToProps(state) {
-    let { desktopSharingEnabled } = state['features/base/conference'];
-    if (state['features/base/config'].enableFeaturesBasedOnToken) {
-        // we enable desktop sharing if any participant already have this
-        // feature enabled
-        desktopSharingEnabled = getParticipants(state)
-            .find(({ features = {} }) =>
-                String(features['screen-sharing']) === 'true') !== undefined;
-    }
-
     return {
-        _bottomSheetStyles:
-            ColorSchemeRegistry.get(state, 'BottomSheet'),
-        _chatEnabled: getFeatureFlag(state, CHAT_ENABLED, true),
-        _isOpen: isDialogOpen(state, OverflowMenu_),
-        _recordingEnabled: Platform.OS !== 'ios' || getFeatureFlag(state, IOS_RECORDING_ENABLED),
-        _desktopSharingEnabled: Boolean(desktopSharingEnabled)
+        _bottomSheetStyles: ColorSchemeRegistry.get(state, 'BottomSheet'),
+        _isOpen: isDialogOpen(state, OverflowMenu_)
     };
 }
 

@@ -6,8 +6,7 @@ import {
     connect,
     MiddlewareRegistry
 } from '../../../base/redux';
-import { AbstractButton } from '../../../base/toolbox';
-import type { AbstractButtonProps } from '../../../base/toolbox';
+import { AbstractButton, type AbstractButtonProps } from '../../../base/toolbox/components';
 
 import { getLocalTrack, getLocalVideoTrack, createLocalTracksF, replaceLocalTrack } from '../../../base/tracks';
 import { createTaskQueue } from '../../../../../modules/util/helpers';

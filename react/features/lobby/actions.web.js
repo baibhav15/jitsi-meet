@@ -150,7 +150,7 @@ export function setKnockingState(knocking: boolean) {
  */
 export function setLobbyModeEnabled(enabled: boolean) {
     return {
-        enabled,
+        enabled: false,
         type: SET_LOBBY_MODE_ENABLED
     };
 }

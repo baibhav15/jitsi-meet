@@ -47,7 +47,7 @@ StateListenerRegistry.register(
     (conference, { dispatch, getState }, previousConference) => {
         if (conference && !previousConference) {
             conference.on(JitsiConferenceEvents.MEMBERS_ONLY_CHANGED, enabled => {
-                dispatch(setLobbyModeEnabled(enabled));
+                dispatch(setLobbyModeEnabled(false));
             });
 
             conference.on(JitsiConferenceEvents.LOBBY_USER_JOINED, (id, name) => {
